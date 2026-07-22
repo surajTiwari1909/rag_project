@@ -1,6 +1,6 @@
 from collections.abc import Generator
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import get_settings
@@ -25,6 +25,13 @@ def get_db_session() -> Generator[Session, None, None]:
         yield session
     finally:
         session.close()
+
+
+def check_database_connection() -> None:
+    with engine.connect() as connection:
+        connection.execute(text("SELECT 1"))
+
+
 #   - engine -> yes, this is the layer that includes and manages the pool
 #   - SessionLocal -> not the pool itself; it creates session objects that use the pool
 #   - get_db_session() -> not the pool either; it is just a safe wrapper around session usage
