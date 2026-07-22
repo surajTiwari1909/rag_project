@@ -1,0 +1,40 @@
+Alembic migration environment for the RAG Knowledge Assistant project.
+
+Without Alembic:
+
+- you would have to create tables manually in PostgreSQL
+- schema changes would be ad hoc
+- different environments could drift apart
+- later updates like new columns, indexes, or constraints would be hard to track safely
+
+With Alembic:
+
+- schema changes are written as versioned migration files
+- the database can be moved forward step by step
+- every environment can apply the same changes in the same order
+- the project gets a reproducible database history
+
+Why it matters specifically in your project:
+
+- Step 8 needs to enable the vector extension
+- Step 9 needs to create the first table with a vector(384) column
+- those are schema-level database changes
+- Alembic is the proper place to manage them
+
+So the practical intent of Step 7 is:
+
+- prepare the migration framework first
+- then use that framework in the next steps to create and evolve the schema safely
+
+In simple terms:
+
+- Step 5 gave the app a Python-side DB connection layer
+- Step 7 gives the project a DB schema change system
+
+If you skip Step 7:
+
+- you can still run raw SQL manually
+- but Phase 2 becomes harder to maintain, verify, and repeat
+
+So Step 7 is not about querying data yet.
+It is about managing the database structure in a clean, versioned way.
