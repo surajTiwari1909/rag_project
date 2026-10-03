@@ -9,6 +9,13 @@ class Settings(BaseSettings):
     app_env: str = "development"
     debug: bool = True
     api_v1_prefix: str = "/api/v1"
+    postgres_user: str = "rag_user"
+    postgres_password: str = "rag_password"
+    postgres_db: str = "rag_assistant"
+    postgres_host: str = "localhost"
+    postgres_port: int = 5432
+    db_echo: bool = False
+    vector_dimension: int = 384
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -16,6 +23,14 @@ class Settings(BaseSettings):
         case_sensitive=False,
         extra="ignore",
     )
+
+    @property
+    def sqlalchemy_database_uri(self) -> str:
+        return (
+            "postgresql+psycopg://"
+            f"{self.postgres_user}:{self.postgres_password}"
+            f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
+        )
 
 
 @lru_cache
